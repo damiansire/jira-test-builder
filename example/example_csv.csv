@@ -1,0 +1,9 @@
+Issue Id,Issue key,Test type,Test Summary,Test Priority,Component,Action,Links
+1,,Manual,Test 1 with step test,High,Visits,Go to login page,GS-1210
+1,,Manual,,,Visits,Enter username,
+1,,Manual,,,Visits,Enter password,
+1,,Manual,,,Visits,Click login button,
+2,,Manual,sample test 2 with step,High,Visits,Go to login page,GS-1210
+2,,Manual,,,Visits,Enter username,
+2,,Manual,,,Visits,Enter password,
+2,,Manual,,,Visits,Click login button,
