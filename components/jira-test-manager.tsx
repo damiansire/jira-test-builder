@@ -1,14 +1,9 @@
 "use client"
 
-import { useState, useRef, useEffect } from "react"
+import { useState } from "react"
 import { Progress } from "@/components/ui/progress"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ChevronLeft, ChevronRight, Edit, Plus, Trash } from 'lucide-react'
 import { Task, Step, AITest, Test } from "./jira-test-manager/types"
 import { TaskList } from "./jira-test-manager/task-list"
 import { TaskDetails } from "./jira-test-manager/task-details"
@@ -45,12 +40,6 @@ export function JiraTestManager() {
     completed: false
   })))
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
-  const [newTestTitle, setNewTestTitle] = useState("")
-  const [newTestDescription, setNewTestDescription] = useState("")
-  const [newStep, setNewStep] = useState("")
-  const [newTestSteps, setNewTestSteps] = useState<Step[]>([])
-  const [editingStepId, setEditingStepId] = useState<number | null>(null)
-  const [editingTestId, setEditingTestId] = useState<number | null>(null)
   const [activeTab, setActiveTab] = useState("details")
   const [aiTests] = useState<AITest[]>([
     {
@@ -95,87 +84,6 @@ export function JiraTestManager() {
   const tasksWithTests = tasks.filter(task => task.tests.length > 0).length
   const totalTests = tasks.reduce((sum, task) => sum + task.tests.length, 0)
   const progressPercentage = (tasksWithTests / tasks.length) * 100
-
-  const addStep = () => {
-    if (newStep.trim()) {
-      setNewTestSteps([...newTestSteps, { id: Date.now(), description: newStep.trim() }])
-      setNewStep("")
-    }
-  }
-
-  const editStep = (id: number, newDescription: string) => {
-    setNewTestSteps(newTestSteps.map(step =>
-      step.id === id ? { ...step, description: newDescription } : step
-    ))
-    setEditingStepId(null)
-  }
-
-  const deleteStep = (id: number) => {
-    setNewTestSteps(newTestSteps.filter(step => step.id !== id))
-  }
-
-  const createTest = () => {
-    if (selectedTaskId && newTestTitle.trim() && newTestDescription.trim() && newTestSteps.length > 0) {
-      setTasks(tasks.map(task => 
-        task.id === selectedTaskId
-          ? { ...task, tests: [...task.tests, { id: Date.now(), title: newTestTitle.trim(), description: newTestDescription.trim(), steps: newTestSteps }] }
-          : task
-      ))
-      setNewTestTitle("")
-      setNewTestDescription("")
-      setNewTestSteps([])
-    }
-  }
-
-  const updateTest = (taskId: string, testId: number, updatedTest: Test) => {
-    setTasks(tasks.map(task =>
-      task.id === taskId
-        ? { ...task, tests: task.tests.map(test => test.id === testId ? updatedTest : test) }
-        : task
-    ))
-    setEditingTestId(null)
-  }
-
-  const deleteTest = (taskId: string, testId: number) => {
-    setTasks(tasks.map(task =>
-      task.id === taskId
-        ? { ...task, tests: task.tests.filter(test => test.id !== testId) }
-        : task
-    ))
-  }
-
-  const completeTask = (taskId: string) => {
-    const taskToComplete = tasks.find(task => task.id === taskId);
-    if (taskToComplete && taskToComplete.tests.length > 0) {
-      setTasks(tasks.map(task =>
-        task.id === taskId ? { ...task, completed: true } : task
-      ));
-      setSelectedTaskId(null);
-    }
-  }
-
-  const editAiTest = (test: AITest) => {
-    setNewTestTitle(test.title)
-    setNewTestDescription(test.description)
-    setNewTestSteps(test.steps.map((step, index) => ({ id: index, description: step })))
-    setActiveTab("newTest")
-  }
-
-  const addAiTestToTask = (aiTest: AITest) => {
-    if (selectedTaskId) {
-      const newTest: Test = {
-        id: Date.now(),
-        title: aiTest.title,
-        description: aiTest.description,
-        steps: aiTest.steps.map((step, index) => ({ id: index, description: step }))
-      }
-      setTasks(tasks.map(task => 
-        task.id === selectedTaskId
-          ? { ...task, tests: [...task.tests, newTest] }
-          : task
-      ))
-    }
-  }
 
   const handleEditAITest = (test: AITest) => {
     setActiveTab("newTest")
