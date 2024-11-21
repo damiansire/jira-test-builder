@@ -5,15 +5,26 @@ export const getJiraTask = async (): Promise<Task[]> => {
     const response = await fetch('input_secret_data/data_input.csv');
     const text = await response.text();
     const tasks = parse(text, {
-        columns: true,
+        columns: false,
         skip_empty_lines: true,
     });
+
+    const getComments = (task) => {
+        const comments = [];
+        for (let index = 10; index <= 35; index++) {
+            if (task[index] != "") {
+                comments.push(task[index]);
+            }
+        }
+        return comments;
+    }
+
     const jiraTasks: Task[] = tasks.map(task => {
         return {
-            id: task["Clave de incidencia"],
-            title: task["Requirement Summary"],
-            description: task["Descripción"],
-            comments: [],
+            id: task[1],
+            title: task[0],
+            description: task[8],
+            comments: getComments(task),
             tests: [],
             completed: false
         }
