@@ -23,7 +23,7 @@ export const getJiraTask = async (): Promise<Task[]> => {
         return comments;
     }
 
-    const jiraTasks: Task[] = tasks.map(task => {
+    const jiraTasks: Task[] = tasks.slice(1).map(task => {
         return {
             id: task[1],
             title: task[0],
