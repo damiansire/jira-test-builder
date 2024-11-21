@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Progress } from "@/components/ui/progress"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -10,35 +10,26 @@ import { TaskDetails } from "./jira-test-manager/task-details"
 import { NewTestForm } from "./jira-test-manager/new-test-form"
 import { ExistingTests } from "./jira-test-manager/existing-tests"
 import { AITests } from "./jira-test-manager/ai-test"
+import { getJiraTask } from "@/services/data-handle"
 
 export function JiraTestManager() {
-  const [tasks, setTasks] = useState<Task[]>(Array(150).fill(null).map((_, i) => ({
-    id: `TASK-${i + 1}`,
-    title: `Tarea ${i + 1}`,
-    description: `Descripción de la tarea ${i + 1}`,
-    comments: [
-      {
-        id: 1,
-        author: "Usuario 1",
-        content: `Comentario 1 para la tarea ${i + 1}`,
-        timestamp: new Date(Date.now() - Math.random() * 10000000000).toISOString()
-      },
-      {
-        id: 2,
-        author: "Usuario 2",
-        content: `Comentario 2 para la tarea ${i + 1}`,
-        timestamp: new Date(Date.now() - Math.random() * 10000000000).toISOString()
-      },
-      {
-        id: 3,
-        author: "Usuario 3",
-        content: `Comentario 3 para la tarea ${i + 1}`,
-        timestamp: new Date(Date.now() - Math.random() * 10000000000).toISOString()
+
+  const [tasks, setTasks] = useState<Task[]>([])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const data = await getJiraTask();
+        setTasks(data); 
+      } catch (error) {
+        alert("Error al obtener las tareas");
+        alert(error)
       }
-    ],
-    tests: [],
-    completed: false
-  })))
+    };
+
+    fetchData();
+  }, []);
+
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState("details")
   const [aiTests] = useState<AITest[]>([
@@ -81,8 +72,8 @@ export function JiraTestManager() {
     }
   ])
 
-  const tasksWithTests = tasks.filter(task => task.tests.length > 0).length
-  const totalTests = tasks.reduce((sum, task) => sum + task.tests.length, 0)
+  const tasksWithTests = tasks.filter(task => task.tests && task.tests.length > 0).length
+  const totalTests = tasks.reduce((sum, task) => sum + (task.tests?.length || 0), 0)
   const progressPercentage = (tasksWithTests / tasks.length) * 100
 
   const handleEditAITest = (test: AITest) => {

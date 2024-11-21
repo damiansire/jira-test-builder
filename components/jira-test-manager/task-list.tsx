@@ -24,7 +24,7 @@ export function TaskList({ tasks, selectedTaskId, onSelectTask }: TaskListProps)
             >
               <CardContent className="p-2">
                 <h3 className="font-medium">{task.title}</h3>
-                <p className="text-xs">Tests: {task.tests.length}</p>
+                <p className="text-xs">Tests: {task.tests?.length}</p>
               </CardContent>
             </Card>
           ))}
