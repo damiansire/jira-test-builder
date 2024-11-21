@@ -9,13 +9,27 @@ export const getJiraTask = async (): Promise<Task[]> => {
         skip_empty_lines: true,
     });
 
+    const cleanComments = (selectedComment: string) => {
+        //Delete Mentions
+        let pattern = /\[~accountid:[^\]]*\]/g;
+        let cleanComment = selectedComment.replace(pattern, "");
+
+        //Delete imgs
+        pattern = /![\w-]+\.png\|width=\d+,height=\d+,alt="[\w-]+\.png"/g;
+        cleanComment = cleanComment.replace(pattern, "");
+
+        return cleanComment;
+    }
+
     const getComments = (task) => {
         const comments = [];
         for (let index = 10; index <= 35; index++) {
             if (task[index] != "") {
                 const parsedComment = task[index].split(";")
                 if (parsedComment.length > 1) {
-                    comments.push(parsedComment.at(-1));
+                    const selectedComment = parsedComment.at(-1);
+                    const clenaComment = cleanComments(selectedComment);
+                    comments.push(clenaComment);
                 }
             }
         }
