@@ -33,7 +33,6 @@ export const getJiraTask = async (): Promise<Task[]> => {
                 }
             }
         }
-        debugger
         return comments;
     }
 

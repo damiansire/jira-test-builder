@@ -7,6 +7,7 @@ import rehypeRaw from 'rehype-raw'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeHighlight from 'rehype-highlight'
 import { parseDescription } from "@/lib/utils"
+import { ExternalLink } from "lucide-react"
 
 type TaskDetailsProps = {
   task: Task
@@ -15,8 +16,9 @@ type TaskDetailsProps = {
 }
 
 export function TaskDetails({ task, onCompleteTask, onAddTest }: TaskDetailsProps) {
-  const descriptionSections = parseDescription(task.description);
+  const JiraBaseUrl = process.env.NEXT_PUBLIC_JIRA_BASE_URL;
 
+  const descriptionSections = parseDescription(task.description);
 
   return (
     <Card className="h-full">
@@ -46,18 +48,24 @@ export function TaskDetails({ task, onCompleteTask, onAddTest }: TaskDetailsProp
           ))}
         </> : ""
         }
-        <Button
-          className="mt-4"
-          onClick={() => {
-            if (task.tests.length === 0) {
-              onAddTest()
-            } else {
-              onCompleteTask(task.id)
-            }
-          }}
-        >
-          {task.tests.length === 0 ? 'Agregar tests para completar' : 'Completar Tarea'}
-        </Button>
+        <div className="flex">
+
+          <Button
+            className="mt-4 my-auto"
+            onClick={() => {
+              if (task.tests.length === 0) {
+                onAddTest()
+              } else {
+                onCompleteTask(task.id)
+              }
+            }}
+          >
+            {task.tests.length === 0 ? 'Agregar tests para completar' : 'Completar Tarea'}
+          </Button>
+          <a href={`${JiraBaseUrl}/browse/${task.id}`} target="_blank" rel="noopener noreferrer" className="text-primary my-auto">
+            <ExternalLink className="w-6 h-6" />
+          </a>
+        </div>
       </CardContent>
     </Card>
   )

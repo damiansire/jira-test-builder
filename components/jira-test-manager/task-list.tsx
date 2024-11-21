@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Task } from "./types"
+import { ExternalLink } from "lucide-react"
 
 type TaskListProps = {
   tasks: Task[]
@@ -23,7 +24,7 @@ export function TaskList({ tasks, selectedTaskId, onSelectTask }: TaskListProps)
               onClick={() => onSelectTask(task.id)}
             >
               <CardContent className="p-2">
-                <h3 className="font-medium">{task.title}</h3>
+                <h3 className="font-medium">{task.title} </h3>
                 <p className="text-xs">Tests: {task.tests?.length}</p>
               </CardContent>
             </Card>
