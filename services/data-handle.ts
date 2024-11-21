@@ -13,9 +13,13 @@ export const getJiraTask = async (): Promise<Task[]> => {
         const comments = [];
         for (let index = 10; index <= 35; index++) {
             if (task[index] != "") {
-                comments.push(task[index]);
+                const parsedComment = task[index].split(";")
+                if (parsedComment.length > 1) {
+                    comments.push(parsedComment.at(-1));
+                }
             }
         }
+        debugger
         return comments;
     }
 
