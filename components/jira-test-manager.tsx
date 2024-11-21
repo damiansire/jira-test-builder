@@ -20,7 +20,7 @@ export function JiraTestManager() {
     const fetchData = async () => {
       try {
         const data = await getJiraTask();
-        setTasks(data); 
+        setTasks(data);
       } catch (error) {
         alert("Error al obtener las tareas");
         alert(error)
@@ -88,7 +88,7 @@ export function JiraTestManager() {
         description: aiTest.description,
         steps: aiTest.steps.map((step, index) => ({ id: index, description: step }))
       }
-      setTasks(tasks.map(task => 
+      setTasks(tasks.map(task =>
         task.id === selectedTaskId
           ? { ...task, tests: [...task.tests, newTest] }
           : task
@@ -110,7 +110,7 @@ export function JiraTestManager() {
 
   const handleCreateTest = (title: string, description: string, steps: Step[]) => {
     if (selectedTaskId) {
-      setTasks(tasks.map(task => 
+      setTasks(tasks.map(task =>
         task.id === selectedTaskId
           ? { ...task, tests: [...task.tests, { id: Date.now(), title, description, steps }] }
           : task
@@ -139,16 +139,17 @@ export function JiraTestManager() {
   return (
     <div className="h-screen flex flex-col p-4 space-y-4">
       <h1 className="text-2xl font-bold">Gestor de Tests para Tareas de Jira</h1>
-      
+
       <div className="flex-grow flex space-x-4 overflow-hidden">
+        <div className="flex w-1/3 overflow-hidden">
+          <TaskList
+            tasks={tasks}
+            selectedTaskId={selectedTaskId}
+            onSelectTask={handleSelectTask}
+          />
+        </div>
 
-        <TaskList
-          tasks={tasks}
-          selectedTaskId={selectedTaskId}
-          onSelectTask={handleSelectTask}
-        />
-
-        <div className="flex-grow overflow-hidden">
+        <div className="flex-grow overflow-hidden w-2/3">
           {selectedTask ? (
             <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
               <TabsList>
@@ -158,24 +159,24 @@ export function JiraTestManager() {
                 <TabsTrigger value="aiTests">Tests IA</TabsTrigger>
               </TabsList>
               <TabsContent value="details" className="flex-grow overflow-auto">
-              <TaskDetails
+                <TaskDetails
                   task={selectedTask}
                   onCompleteTask={handleCompleteTask}
                   onAddTest={() => setActiveTab("newTest")}
                 />
               </TabsContent>
               <TabsContent value="newTest" className="flex-grow overflow-auto">
-              <NewTestForm onCreateTest={handleCreateTest} />
+                <NewTestForm onCreateTest={handleCreateTest} />
               </TabsContent>
               <TabsContent value="existingTests" className="flex-grow overflow-auto">
-              <ExistingTests
+                <ExistingTests
                   tests={selectedTask.tests}
                   onUpdateTest={(testId, updatedTest) => handleUpdateTest(selectedTask.id, testId, updatedTest)}
                   onDeleteTest={(testId) => handleDeleteTest(selectedTask.id, testId)}
                 />
               </TabsContent>
               <TabsContent value="aiTests" className="flex-grow overflow-auto">
-              <AITests
+                <AITests
                   aiTests={aiTests}
                   onEditAITest={handleEditAITest}
                   onAddAITestToTask={handleAddAITestToTask}

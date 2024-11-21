@@ -10,15 +10,15 @@ type TaskListProps = {
 
 export function TaskList({ tasks, selectedTaskId, onSelectTask }: TaskListProps) {
   return (
-    <Card className="w-1/3 flex flex-col">
+    <Card className="flex flex-col">
       <CardHeader>
         <CardTitle>Lista de Tareas</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow overflow-hidden">
         <ScrollArea className="h-full">
           {tasks.filter(task => !task.completed).map(task => (
-            <Card 
-              key={task.id} 
+            <Card
+              key={task.id}
               className={`mb-2 cursor-pointer transition-colors ${selectedTaskId === task.id ? 'bg-primary text-primary-foreground' : 'hover:bg-secondary'}`}
               onClick={() => onSelectTask(task.id)}
             >
